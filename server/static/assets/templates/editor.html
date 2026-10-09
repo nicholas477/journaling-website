@@ -1,0 +1,55 @@
+<div class="page-heading editor-page-heading">
+	<div>
+		<a class="back-link" data-editor-back-link>← Library</a>
+		<p class="eyebrow" data-editor-eyebrow>A new page</p>
+		<h1 data-editor-heading>Write</h1>
+	</div>
+	<span class="status" data-render-status role="status" aria-live="polite">Starting renderer…</span>
+</div>
+<form id="document-form" class="document-editor">
+	<div class="mobile-editor-tabs" role="group" aria-label="Editor section">
+		<button class="workspace-view-button" type="button" data-mobile-editor-view="text"
+			aria-pressed="true">Text</button>
+		<button class="workspace-view-button" type="button" data-mobile-editor-view="details"
+			aria-pressed="false">Details</button>
+	</div>
+	<div class="document-fields">
+		<label>Title<input id="document-title" name="title" maxlength="200" required
+				placeholder="A title for this note"></label>
+		<label>Subtitle<input id="document-subtitle" name="subtitle" maxlength="300"
+				placeholder="A short line beneath the title"></label>
+		<label>Address<input id="document-slug" name="slug" maxlength="80" pattern="[A-Za-z0-9_-]+" required
+				autocomplete="off" spellcheck="true" placeholder="short-note-address"></label>
+	</div>
+	<div class="workspace-controls" role="group" aria-label="Choose editor view">
+		<button class="workspace-view-button" type="button" data-workspace-view="text" aria-pressed="true">Text</button>
+		<button class="workspace-view-button" type="button" data-workspace-view="output"
+			aria-pressed="false">Output</button>
+	</div>
+	<div class="workspace">
+
+		<!-- Editor pane -->
+		<section class="pane editor-pane" aria-label="Markdown source">
+			<label class="visually-hidden" for="markdown-input">Markdown source</label>
+			<textarea id="markdown-input" class="editor" spellcheck="true" autocapitalize="true" autocomplete="off"
+				required></textarea>
+			<div class="editor-footer">
+				<span id="character-count">0 characters</span>
+				<span>Saved when you choose Save note. Drafts are automatically saved to local storage.</span>
+			</div>
+		</section>
+
+		<!-- Preview pane -->
+		<section class="pane preview-pane" aria-label="Rendered output" hidden>
+			<iframe id="html-preview" class="preview" title="Rendered Markdown preview" sandbox="allow-scripts"
+				referrerpolicy="no-referrer"></iframe>
+		</section>
+	</div>
+	<div class="form-actions">
+		<p id="save-message" class="form-message" role="status" aria-live="polite"></p>
+		<div class="form-actions-buttons">
+			<button id="save-button" class="button" type="button">Save note</button>
+			<button id="publish-button" class="button" type="submit">Publish note</button>
+		</div>
+	</div>
+</form>

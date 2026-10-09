@@ -1,0 +1,4 @@
+.git
+**/target
+/server/data
+/server/static/pkg

@@ -1,0 +1,131 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Journal</title>
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+  <script>
+    try {
+      const savedPreferences = JSON.parse(localStorage.getItem('appearance') || 'null');
+      const root = document.documentElement;
+      if (savedPreferences && typeof savedPreferences === 'object') {
+        root.dataset.theme = savedPreferences.theme === 'dark' ? 'dark' : 'light';
+        root.style.setProperty('--background-color', savedPreferences.backgroundColor || '');
+        root.style.setProperty('--background-image', savedPreferences.backgroundImage ?
+          `url(${JSON.stringify(savedPreferences.backgroundImage)})` : 'none');
+        const opacity = Number(savedPreferences.backgroundOpacity);
+        root.style.setProperty('--background-image-opacity',
+          String((Number.isFinite(opacity) ? opacity : 20) / 100));
+        root.style.setProperty('--background-image-repeat', savedPreferences.backgroundRepeat || 'no-repeat');
+        root.style.setProperty('--background-image-size', savedPreferences.backgroundSize || 'cover');
+      } else if (localStorage.getItem('theme') === 'dark') {
+        root.dataset.theme = 'dark';
+      }
+    } catch {
+      // Preferences may be unavailable when storage is disabled.
+    }
+  </script>
+  <link rel="stylesheet" href="/assets/styles.css" />
+  <script type="module" src="/assets/js/app.js"></script>
+</head>
+
+<body>
+  <header class="topbar">
+    <a class="brand" href="/" aria-label="Stillnote home">
+      <span>Journal</span>
+    </a>
+    <details class="appearance-menu">
+      <summary class="theme-toggle">Appearance</summary>
+      <div class="appearance-panel" aria-label="Appearance settings">
+        <label>Theme
+          <select id="theme-select">
+            <option value="light">Light mode</option>
+            <option value="dark">Dark mode</option>
+          </select>
+        </label>
+        <label>Background image
+          <input id="background-image" type="file" accept="image/*" />
+        </label>
+        <label>Background image URL
+          <input id="background-image-url" type="url" placeholder="https://example.com/image.jpg" />
+        </label>
+        <button id="clear-background-image" class="text-button" type="button">Remove image</button>
+        <label class="appearance-color">Background color
+          <input id="background-color" type="color" />
+        </label>
+        <label>Image opacity
+          <input id="background-opacity" type="range" min="0" max="100" value="20" />
+          <output id="background-opacity-value" for="background-opacity">20%</output>
+        </label>
+        <label>Image repeat
+          <select id="background-repeat">
+            <option value="no-repeat">No repeat</option>
+            <option value="repeat">Repeat</option>
+            <option value="repeat-x">Repeat horizontally</option>
+            <option value="repeat-y">Repeat vertically</option>
+          </select>
+        </label>
+        <label>Image size
+          <select id="background-size">
+            <option value="cover">Cover</option>
+            <option value="contain">Contain</option>
+            <option value="auto">Original size</option>
+            <option value="100% 100%">Stretch</option>
+          </select>
+        </label>
+        <div class="accent-setting">
+          <label class="appearance-color">Accent color
+            <input id="accent-color" type="color" />
+          </label>
+          <button id="reset-accent-color" class="text-button" type="button">Reset to orange</button>
+        </div>
+      </div>
+    </details>
+  </header>
+
+  <template id="library-view-template">
+    <div class="page-heading">
+      <a class="button" href="/documents/create">Write a note</a>
+    </div>
+
+    <section aria-labelledby="library-heading">
+      <h2 id="library-heading" class="section-heading">Recent notes</h2>
+      <div id="document-list" class="document-list" aria-live="polite">
+        <p class="muted">Loading notes…</p>
+      </div>
+    </section>
+
+    <template id="document-row-template">
+      <article class="document-row">
+        <div class="document-row-main">
+          <a class="document-title" data-document-title></a>
+          <p class="document-subtitle" data-document-subtitle hidden></p>
+          <p class="document-excerpt" data-document-excerpt hidden></p>
+        </div>
+        <time class="document-date" data-document-date></time>
+      </article>
+    </template>
+
+    <template id="library-empty-state">
+      <div class="empty-state">
+        <p class="empty-mark" aria-hidden="true">S</p>
+        <h2>Nothing here yet</h2>
+        <p>Your notes will appear here after you write the first one.</p>
+        <a class="text-link" href="/documents/create">Create your first note</a>
+      </div>
+    </template>
+
+    <template id="library-error-template">
+      <div class="notice notice-error">
+        <p data-error-message></p>
+        <button class="text-button" data-retry type="button">Try again</button>
+      </div>
+    </template>
+  </template>
+
+  <main id="app-main" class="page-shell" tabindex="-1"></main>
+</body>
+
+</html>

@@ -1,0 +1,193 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <meta http-equiv="Content-Security-Policy"
+        content="default-src 'none'; base-uri 'none'; form-action 'none'; object-src 'none'; img-src data: http: https:; style-src 'unsafe-inline'; script-src 'nonce-<!-- preview-nonce -->'">
+    <style>
+        :root {
+            color-scheme: light;
+            font-family: Georgia, "Times New Roman", serif;
+            --ink: #242424;
+            --paper: #ffffff;
+            --line: #e7e5e3;
+            --quote: #65615d;
+            --code-paper: #f4f2f0;
+            --pre-paper: #f6f5f3;
+            --link: #d95720;
+            color: var(--ink);
+        }
+
+        :root[data-theme="dark"] {
+            color-scheme: dark;
+            --ink: #e8e5e1;
+            --paper: #181a1c;
+            --line: #3b3d40;
+            --quote: #bbb5ad;
+            --code-paper: #25282b;
+            --pre-paper: #222528;
+            --link: #f28a58;
+        }
+
+        body {
+            position: relative;
+            max-width: 700px;
+            margin: 0 auto;
+            padding: 44px 30px;
+            background: var(--background-color, var(--paper));
+            color: var(--ink);
+            font-size: 18px;
+            line-height: 1.75;
+            overflow-wrap: anywhere;
+        }
+
+        body::before {
+            position: fixed;
+            z-index: -1;
+            inset: 0;
+            background-image: var(--background-image, none);
+            background-position: center;
+            background-repeat: var(--background-image-repeat, no-repeat);
+            background-size: var(--background-image-size, cover);
+            content: "";
+            opacity: var(--background-image-opacity, 0);
+            pointer-events: none;
+        }
+
+        h1,
+        h2,
+        h3,
+        h4,
+        h5,
+        h6 {
+            margin: 1.8em 0 .65em;
+            color: var(--ink);
+            font-weight: 500;
+            line-height: 1.2;
+        }
+
+        h1 {
+            margin-top: 0;
+            font-size: 2.15em;
+        }
+
+        h2 {
+            font-size: 1.65em;
+        }
+
+        p,
+        ul,
+        ol,
+        blockquote,
+        pre {
+            margin: 1.2em 0;
+        }
+
+        a {
+            color: var(--link);
+        }
+
+        blockquote {
+            margin-left: 0;
+            padding: .1em 1em;
+            border-left: 3px solid var(--link);
+            color: var(--quote);
+        }
+
+        code {
+            padding: .15em .35em;
+            border-radius: 3px;
+            background: var(--code-paper);
+            font-family: ui-monospace, monospace;
+            font-size: .86em;
+        }
+
+        pre {
+            overflow-x: auto;
+            padding: 16px;
+            border-radius: 4px;
+            background: var(--pre-paper);
+            line-height: 1.6;
+        }
+
+        pre code {
+            padding: 0;
+            background: transparent;
+        }
+
+        img {
+            max-width: 100%;
+            height: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th,
+        td {
+            padding: 8px 10px;
+            border: 1px solid var(--line);
+            text-align: left;
+        }
+
+        hr {
+            height: 1px;
+            border: 0;
+            background: var(--line);
+        }
+
+        @media (max-width: 600px) {
+            body {
+                padding: 28px 22px;
+                font-size: 17px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <!-- markdown-content -->
+    <script nonce="<!-- preview-nonce -->">
+        let activeImage;
+        let activeImageUrl;
+
+        function getBackgroundImageValue(image) {
+            if (image instanceof Blob) {
+                if (image !== activeImage) {
+                    if (activeImageUrl) URL.revokeObjectURL(activeImageUrl);
+                    activeImage = image;
+                    activeImageUrl = URL.createObjectURL(image);
+                }
+                return `url("${activeImageUrl}")`;
+            }
+            if (activeImageUrl) URL.revokeObjectURL(activeImageUrl);
+            activeImage = undefined;
+            activeImageUrl = undefined;
+            return image ? `url(${JSON.stringify(image)})` : "none";
+        }
+
+        window.addEventListener("message", ({ data }) => {
+            if (data?.type !== "set-preview-appearance" || !data.preferences) return;
+            const preferences = data.preferences;
+            if (!["light", "dark"].includes(preferences.theme)) return;
+            const root = document.documentElement;
+            root.dataset.theme = preferences.theme;
+            root.style.setProperty("--background-color", preferences.backgroundColor || "");
+            root.style.setProperty("--background-image",
+                getBackgroundImageValue(preferences.backgroundImage));
+            root.style.setProperty("--background-image-opacity",
+                String(preferences.backgroundOpacity / 100));
+            root.style.setProperty("--background-image-repeat", preferences.backgroundRepeat);
+            root.style.setProperty("--background-image-size", preferences.backgroundSize);
+            const accentColor = preferences.accentColor || "#e8672c";
+            const accentShade = preferences.theme === "dark" ? "white" : "black";
+            root.style.setProperty("--link", `color-mix(in srgb, ${accentColor} 82%, ${accentShade})`);
+        });
+    </script>
+</body>
+
+</html>
